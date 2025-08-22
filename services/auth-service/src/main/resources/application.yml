@@ -1,0 +1,18 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: auth-service
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/sparrow
+
+
+jwt:
+  secret: "change-this-to-a-very-long-random-secret-at-least-32-characters"
+  expirationMillis: 3600000
+
+logging:
+  level:
+    org.springframework.security: DEBUG
