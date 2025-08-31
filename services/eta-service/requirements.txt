@@ -17,5 +17,6 @@ flask
 xgboost
 scipy
 openpyxl
+ipykernel
 
 #-e .
