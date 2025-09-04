@@ -1,0 +1,50 @@
+spring:
+  application:
+    name: consolidation-service
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/sparrow_consolidation
+  redis:
+    host: localhost
+    port: 6379
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: consolidation-service-group
+      auto-offset-reset: earliest
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+server:
+  port: 8080
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
+
+# Consolidation Configuration
+consolidation:
+  batch-size: 50
+  max-wait-time: 3600 # 1 hour in seconds
+  zip-radius: 10 # km
+  city-radius: 25 # km
+  state-radius: 100 # km
+  max-consolidation-weight: 1000 # kg
+  max-consolidation-volume: 10 # cubic meters
+
+# JWT Configuration
+jwt:
+  secret: mySecretKeyForDevelopmentOnlyChangeInProduction123456789012345678901234567890
+  expiration: 86400000 # 24 hours in milliseconds
+
+logging:
+  level:
+    com.sparrow.consolidation_service: DEBUG
+    org.springframework.kafka: INFO
+    org.springframework.data.mongodb: DEBUG
