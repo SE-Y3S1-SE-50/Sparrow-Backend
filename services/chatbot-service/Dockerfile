@@ -1,5 +1,5 @@
-# ====== Build stage ======
-FROM python:3.11-slim AS base
+# ====== Base image ======
+FROM python:3.11-slim
 
 WORKDIR /app
 
@@ -7,31 +7,26 @@ WORKDIR /app
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
-# Install system dependencies (customize if needed, e.g., libpq-dev for Postgres, etc.)
+# Install system dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential \
-    curl \
+    build-essential curl \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy dependency file (requirements.txt or pyproject.toml/poetry)
+# Copy dependency file
 COPY requirements.txt .
 
-# Install dependencies
+# Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy service code
+# Copy application code
 COPY . .
 
-# Expose port (e.g., FastAPI / Flask / Django app)
+# Expose port (Flask default)
 EXPOSE 8080
 
-# Healthcheck (adjust URL depending on your framework)
+# Healthcheck endpoint
 HEALTHCHECK --interval=20s --timeout=3s --retries=5 --start-period=20s \
-  CMD curl -f http://localhost:8080/health || exit 1
+    CMD curl -f http://localhost:8080/health || exit 1
 
-# Command (adjust depending on your framework)
-# Example: Flask
-# CMD ["python", "app.py"]
-
-# Example: FastAPI with Uvicorn
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]
+# Run the Flask application
+CMD ["python3", "main.py"]

@@ -1,5 +1,6 @@
 spring:
   redis:
-    host: ${REDIS_HOST:redis}   # fallback to redis
-    port: ${REDIS_PORT:6379}    # fallback to 6379
+    host: ${REDIS_HOST:your-redis-cloud-host}   # Replace with your Redis Cloud host
+    port: ${REDIS_PORT:6379}                    # Replace with your Redis Cloud port if different
+    password: ${REDIS_PASSWORD}                 # Required if your Redis Cloud requires auth
     timeout: 2000
