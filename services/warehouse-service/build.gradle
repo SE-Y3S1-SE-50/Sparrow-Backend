@@ -21,7 +21,8 @@ configurations {
 }
 
 repositories {
-	mavenCentral()
+    gradlePluginPortal()
+    mavenCentral()
 }
 
 dependencies {
@@ -38,6 +39,11 @@ dependencies {
 	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'                        // NEW
 	runtimeOnly   'io.jsonwebtoken:jjwt-impl:0.11.5'                         // NEW
 	runtimeOnly   'io.jsonwebtoken:jjwt-jackson:0.11.5'
+
+	//Kafka
+	implementation 'org.apache.kafka:kafka-clients'
+  	implementation 'org.springframework.kafka:spring-kafka'
+
 }
 
 tasks.named('test') {

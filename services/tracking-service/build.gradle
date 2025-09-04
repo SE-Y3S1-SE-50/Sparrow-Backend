@@ -21,7 +21,8 @@ configurations {
 }
 
 repositories {
-	mavenCentral()
+    gradlePluginPortal()
+    mavenCentral()
 }
 
 dependencies {
@@ -42,6 +43,10 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	//Kafka 
+	implementation 'org.apache.kafka:kafka-clients'
+  	implementation 'org.springframework.kafka:spring-kafka'
+
 }
 
 tasks.named('test') {

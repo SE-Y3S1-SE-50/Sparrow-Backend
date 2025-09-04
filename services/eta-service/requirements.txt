@@ -1,21 +1,14 @@
-python-dotenv
-pandas
-numpy 
-pymongo
-certifi
-pymongo[srv]
-scikit-learn
-mlflow
-pyaml
-dagshub
+# Astro Runtime includes the following pre-installed providers packages: https://www.astronomer.io/docs/astro/runtime-image-architecture#provider-packages
+langchain
+langgraph
+langchain_community
+langchain_core
+langchain_groq
 fastapi
 uvicorn
-geopy
-xgboost
-python-dotenv
+watchdog
+langgraph-cli[inmem]
+streamlit
+tavily-python
 flask
-xgboost
-scipy
-openpyxl
-
-#-e .
+uuid

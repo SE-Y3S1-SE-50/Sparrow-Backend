@@ -1,6 +1,6 @@
 spring:
   kafka:
-    bootstrap-servers: ${KAFKA_BROKER:kafka:9092}  # fallback to kafka:9092
+    bootstrap-servers: ${KAFKA_BROKER:your-cluster-url:9092}  # Replace with your Confluent Cloud broker
     consumer:
       group-id: parcel-tracking-group
       auto-offset-reset: earliest
@@ -9,3 +9,9 @@ spring:
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      acks: all
+      retries: 10
+    properties:
+      security.protocol: SASL_SSL
+      sasl.mechanism: PLAIN
+      sasl.jaas.config: org.apache.kafka.common.security.plain.PlainLoginModule required username="${CONFLUENT_API_KEY}" password="${CONFLUENT_API_SECRET}";

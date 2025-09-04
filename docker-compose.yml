@@ -1,52 +1,4 @@
 services:
-  # ==== INFRASTRUCTURE SERVICES ====
-  mongo:
-    image: mongo:6.0
-    container_name: mongo
-    ports:
-      - "27017:27017"
-    volumes:
-      - mongo_data:/data/db
-    restart: unless-stopped
-    networks:
-      - backend
-
-  redis:
-    image: redis:7.2-alpine
-    container_name: redis
-    ports:
-      - "6379:6379"
-    networks:
-      - backend
-
-  zookeeper:
-    image: confluentinc/cp-zookeeper:7.6.1
-    container_name: zookeeper
-    environment:
-      ZOOKEEPER_CLIENT_PORT: 2181
-      ZOOKEEPER_TICK_TIME: 2000
-    ports:
-      - "2181:2181"
-    networks:
-      - backend
-
-  kafka:
-    image: confluentinc/cp-kafka:7.6.1
-    container_name: kafka
-    depends_on:
-      - zookeeper
-    ports:
-      - "9092:9092"
-    environment:
-      KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:9092
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
-      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-    networks:
-      - backend
-
   # ==== SPRING BOOT SERVICES ====
   auth-service:
     build: ./services/auth-service
@@ -54,19 +6,21 @@ services:
     volumes:
       - ./config/kafka-config.yml:/app/config/kafka-config.yml
       - ./config/redis-config.yml:/app/config/redis-config.yml
-      - ./config/mongo-config.yml:/app/config/mongo-config.yml
     environment:
       SPRING_CONFIG_ADDITIONAL_LOCATION: file:/app/config/
       SPRING_PROFILES_ACTIVE: docker
       APP_NAME: auth-service
+      MONGO_URI: ${MONGO_URI}
+      KAFKA_BROKER: ${KAFKA_BROKER}
+      CONFLUENT_API_KEY: ${CONFLUENT_API_KEY}
+      CONFLUENT_API_SECRET: ${CONFLUENT_API_SECRET}
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PORT: ${REDIS_PORT}
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
     ports:
       - "8001:8080"
     networks:
       - backend
-    depends_on:
-      - kafka
-      - redis
-      - mongo
 
   consolidation-service:
     build: ./services/consolidation-service
@@ -74,19 +28,21 @@ services:
     volumes:
       - ./config/kafka-config.yml:/app/config/kafka-config.yml
       - ./config/redis-config.yml:/app/config/redis-config.yml
-      - ./config/mongo-config.yml:/app/config/mongo-config.yml
     environment:
       SPRING_CONFIG_ADDITIONAL_LOCATION: file:/app/config/
       SPRING_PROFILES_ACTIVE: docker
       APP_NAME: consolidation-service
+      MONGO_URI: ${MONGO_URI}
+      KAFKA_BROKER: ${KAFKA_BROKER}
+      CONFLUENT_API_KEY: ${CONFLUENT_API_KEY}
+      CONFLUENT_API_SECRET: ${CONFLUENT_API_SECRET}
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PORT: ${REDIS_PORT}
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
     ports:
       - "8003:8080"
     networks:
       - backend
-    depends_on:
-      - kafka
-      - redis
-      - mongo
 
   parcel-service:
     build: ./services/parcel-service
@@ -94,19 +50,21 @@ services:
     volumes:
       - ./config/kafka-config.yml:/app/config/kafka-config.yml
       - ./config/redis-config.yml:/app/config/redis-config.yml
-      - ./config/mongo-config.yml:/app/config/mongo-config.yml
     environment:
       SPRING_CONFIG_ADDITIONAL_LOCATION: file:/app/config/
       SPRING_PROFILES_ACTIVE: docker
       APP_NAME: parcel-service
+      MONGO_URI: ${MONGO_URI}
+      KAFKA_BROKER: ${KAFKA_BROKER}
+      CONFLUENT_API_KEY: ${CONFLUENT_API_KEY}
+      CONFLUENT_API_SECRET: ${CONFLUENT_API_SECRET}
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PORT: ${REDIS_PORT}
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
     ports:
       - "8005:8080"
     networks:
       - backend
-    depends_on:
-      - kafka
-      - redis
-      - mongo
 
   pricing-service:
     build: ./services/pricing-service
@@ -114,19 +72,21 @@ services:
     volumes:
       - ./config/kafka-config.yml:/app/config/kafka-config.yml
       - ./config/redis-config.yml:/app/config/redis-config.yml
-      - ./config/mongo-config.yml:/app/config/mongo-config.yml
     environment:
       SPRING_CONFIG_ADDITIONAL_LOCATION: file:/app/config/
       SPRING_PROFILES_ACTIVE: docker
       APP_NAME: pricing-service
+      MONGO_URI: ${MONGO_URI}
+      KAFKA_BROKER: ${KAFKA_BROKER}
+      CONFLUENT_API_KEY: ${CONFLUENT_API_KEY}
+      CONFLUENT_API_SECRET: ${CONFLUENT_API_SECRET}
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PORT: ${REDIS_PORT}
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
     ports:
       - "8006:8080"
     networks:
       - backend
-    depends_on:
-      - kafka
-      - redis
-      - mongo
 
   route-optimization-service:
     build: ./services/route-optimization-service
@@ -134,19 +94,21 @@ services:
     volumes:
       - ./config/kafka-config.yml:/app/config/kafka-config.yml
       - ./config/redis-config.yml:/app/config/redis-config.yml
-      - ./config/mongo-config.yml:/app/config/mongo-config.yml
     environment:
       SPRING_CONFIG_ADDITIONAL_LOCATION: file:/app/config/
       SPRING_PROFILES_ACTIVE: docker
       APP_NAME: route-optimization-service
+      MONGO_URI: ${MONGO_URI}
+      KAFKA_BROKER: ${KAFKA_BROKER}
+      CONFLUENT_API_KEY: ${CONFLUENT_API_KEY}
+      CONFLUENT_API_SECRET: ${CONFLUENT_API_SECRET}
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PORT: ${REDIS_PORT}
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
     ports:
       - "8007:8080"
     networks:
       - backend
-    depends_on:
-      - kafka
-      - redis
-      - mongo
 
   tracking-service:
     build: ./services/tracking-service
@@ -154,51 +116,71 @@ services:
     volumes:
       - ./config/kafka-config.yml:/app/config/kafka-config.yml
       - ./config/redis-config.yml:/app/config/redis-config.yml
-      - ./config/mongo-config.yml:/app/config/mongo-config.yml
     environment:
       SPRING_CONFIG_ADDITIONAL_LOCATION: file:/app/config/
       SPRING_PROFILES_ACTIVE: docker
       APP_NAME: tracking-service
       GOOGLE_MAPS_API_KEY: ${GOOGLE_MAPS_API_KEY:-your-google-maps-api-key}
+      MONGO_URI: ${MONGO_URI}
+      KAFKA_BROKER: ${KAFKA_BROKER}
+      CONFLUENT_API_KEY: ${CONFLUENT_API_KEY}
+      CONFLUENT_API_SECRET: ${CONFLUENT_API_SECRET}
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PORT: ${REDIS_PORT}
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
     ports:
       - "8008:8080"
     networks:
       - backend
-    depends_on:
-      - kafka
-      - redis
-      - mongo
 
   # ==== PYTHON SERVICES ====
   chatbot-service:
     build: ./services/chatbot-service
     container_name: chatbot-service
     environment:
-      REDIS_HOST: redis
-      REDIS_PORT: 6379
-      KAFKA_BROKER: kafka:9092
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PORT: ${REDIS_PORT}
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      KAFKA_BROKER: ${KAFKA_BROKER}
+      CONFLUENT_API_KEY: ${CONFLUENT_API_KEY}
+      CONFLUENT_API_SECRET: ${CONFLUENT_API_SECRET}
+      MONGO_URI: ${MONGO_URI}
     ports:
       - "8002:8080"
     networks:
       - backend
-    depends_on:
-      - kafka
-      - redis
 
-  eta-service:
-    build: ./services/eta-service
-    container_name: eta-service
+#  eta-service:
+#    build: ./services/eta-service
+#    container_name: eta-service
+#    environment:
+#      REDIS_HOST: ${REDIS_HOST}
+#      REDIS_PORT: ${REDIS_PORT}
+#      REDIS_PASSWORD: ${REDIS_PASSWORD}
+#      KAFKA_BROKER: ${KAFKA_BROKER}
+#      CONFLUENT_API_KEY: ${CONFLUENT_API_KEY}
+#      CONFLUENT_API_SECRET: ${CONFLUENT_API_SECRET}
+#      MONGO_URI: ${MONGO_URI}
+#    ports:
+#      - "8004:8080"
+#    networks:
+#      - backend
+
+  warehouse-service:
+    build: ./services/warehouse-service
+    container_name: warehouse-service
     environment:
-      REDIS_HOST: redis
-      REDIS_PORT: 6379
-      KAFKA_BROKER: kafka:9092
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PORT: ${REDIS_PORT}
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      KAFKA_BROKER: ${KAFKA_BROKER}
+      CONFLUENT_API_KEY: ${CONFLUENT_API_KEY}
+      CONFLUENT_API_SECRET: ${CONFLUENT_API_SECRET}
+      MONGO_URI: ${MONGO_URI}
     ports:
-      - "8004:8080"
+      - "8009:8080"
     networks:
       - backend
-    depends_on:
-      - kafka
-      - redis
 
   # ==== API GATEWAY ====
   api-gateway:
@@ -207,7 +189,6 @@ services:
     volumes:
       - ./config/kafka-config.yml:/app/config/kafka-config.yml
       - ./config/redis-config.yml:/app/config/redis-config.yml
-      - ./config/mongo-config.yml:/app/config/mongo-config.yml
     environment:
       SPRING_CONFIG_ADDITIONAL_LOCATION: file:/app/config/
       SPRING_PROFILES_ACTIVE: docker
@@ -220,24 +201,18 @@ services:
       PRICING_SERVICE_URL: http://pricing-service:8080
       ROUTE_OPTIMIZATION_SERVICE_URL: http://route-optimization-service:8080
       TRACKING_SERVICE_URL: http://tracking-service:8080
+      MONGO_URI: ${MONGO_URI}
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PORT: ${REDIS_PORT}
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      KAFKA_BROKER: ${KAFKA_BROKER}
+      CONFLUENT_API_KEY: ${CONFLUENT_API_KEY}
+      CONFLUENT_API_SECRET: ${CONFLUENT_API_SECRET}
     ports:
       - "8000:8080"
-    depends_on:
-      - auth-service
-      - chatbot-service
-      - consolidation-service
-      - eta-service
-      - parcel-service
-      - pricing-service
-      - route-optimization-service
-      - tracking-service
     networks:
       - backend
 
 networks:
   backend:
     driver: bridge
-
-
-volumes:
-  mongo_data:

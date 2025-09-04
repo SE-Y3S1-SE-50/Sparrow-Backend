@@ -21,7 +21,8 @@ configurations {
 }
 
 repositories {
-	mavenCentral()
+    gradlePluginPortal()
+    mavenCentral()
 }
 
 dependencies {
@@ -36,6 +37,10 @@ dependencies {
 
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
+
+	//Kfaka 
+	implementation 'org.apache.kafka:kafka-clients'
+  	implementation 'org.springframework.kafka:spring-kafka'
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
