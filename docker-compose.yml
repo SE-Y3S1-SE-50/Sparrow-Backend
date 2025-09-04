@@ -169,7 +169,13 @@ services:
   warehouse-service:
     build: ./services/warehouse-service
     container_name: warehouse-service
+    volumes:
+      - ./config/kafka-config.yml:/app/config/kafka-config.yml
+      - ./config/redis-config.yml:/app/config/redis-config.yml
     environment:
+      SPRING_CONFIG_ADDITIONAL_LOCATION: file:/app/config/
+      SPRING_PROFILES_ACTIVE: docker
+      APP_NAME: warehouse-service
       REDIS_HOST: ${REDIS_HOST}
       REDIS_PORT: ${REDIS_PORT}
       REDIS_PASSWORD: ${REDIS_PASSWORD}
